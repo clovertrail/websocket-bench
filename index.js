@@ -15,10 +15,11 @@ program
   .option('-g, --generator <file>', 'js file for generate message or special event')
   .option('-m, --message <n>', 'number of message for a client. Default to 0', parseInt)
   .option('-o, --output <output>', 'Output file')
-  .option('-t, --type <type>', 'type of websocket server to bench(socket.io, engine.io, faye, primus, wamp). Default to io')
+  .option('-t, --type <type>', 'type of websocket server to bench(socket.io, engine.io, faye, primus, wamp, signalr). Default to io')
   .option('-p, --transport <type>', 'type of transport to websocket(engine.io, websockets, browserchannel, sockjs, socket.io). Default to websockets')
   .option('-k, --keep-alive', 'Keep alive connection')
   .option('-u, --timeout <n>', 'Set connection timeout. Default is 20000ms for socket.io', parseInt)
+  .option('-b, --signalr-hub <hub>', 'Set the Signalr hub name')
   .option('-v, --verbose', 'Verbose Logging')
   .parse(process.argv);
 
@@ -60,8 +61,13 @@ if (!program.type) {
   program.type = 'socket.io';
 }
 
-if (program.type === 'primus' && !program.transport) {
+if (!program.transport) {
   program.transport = 'websockets';
+}
+
+if (program.type === 'signalr' && !program.signalrHub) {
+  logger.error("You have to specify signalr hub name");
+  process.exit(1);
 }
 
 if (!program.timeout) {
@@ -79,7 +85,8 @@ var options = {
   transport     : program.transport,
   keepAlive     : program.keepAlive,
   verbose       : program.verbose,
-  timeout       : program.timeout
+  timeout       : program.timeout,
+  signalrHub    : program.signalrHub
 };
 
 if (program.verbose) {
