@@ -1,7 +1,8 @@
 /*global require, process*/
 
 var Benchmark = require('./lib/benchmark.js'),
-  DefaultReporter = require('./lib/defaultreporter.js'),
+  //DefaultReporter = require('./lib/defaultreporter.js'),
+  DefaultReporter = require('./lib/rawreporter.js'),
   fs = require('fs'),
   program = require('commander'),
   logger = require('./lib/logger');
